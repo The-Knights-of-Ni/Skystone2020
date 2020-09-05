@@ -13,9 +13,12 @@ import org.firstinspires.ftc.teamcode.SubSystems.Robot;
 
 import java.io.IOException;
 
+/**
+ * Created by Elijah Rowe
+ */
 
-@TeleOp(name="Drive by Wire", group="Assisted Driving")
-public class DriveByWire extends LinearOpMode {
+@TeleOp(name="OmniDriveTest", group = "Drive Tests")
+public class OmniDriveTest extends LinearOpMode {
     private Robot robot;
     private BNO055IMU imu;
     double robotAngle;
@@ -53,6 +56,11 @@ public class DriveByWire extends LinearOpMode {
 
         imu.initialize(parameters);
 
+        double goalAngle;
+        double robotAngle360;
+        double goalAngle360;
+
+
         telemetry.addData("Mode", "calibrating...");
         telemetry.update();
 
@@ -76,16 +84,12 @@ public class DriveByWire extends LinearOpMode {
 
         sleep(1000);
 
-        robot.drive.turnByAngle(0.2, 360);
-        sleep(1000);
-        robot.drive.turnByAngle(0.2, 360);
-
 
         while (opModeIsActive())
         {
 //            //Get gamepad inputs
-//            double leftStickX = gamepad1.left_stick_x;
-//            double leftStickY = -gamepad1.left_stick_y;
+            double leftStickX = gamepad1.left_stick_x;
+            double leftStickY = -gamepad1.left_stick_y;
 //            double rightStickX = gamepad1.right_stick_x;
 //            boolean aButton = gamepad1.a;
 //            boolean bButton = gamepad1.b;
@@ -107,36 +111,54 @@ public class DriveByWire extends LinearOpMode {
 //            boolean bumperLeft2 = gamepad2.left_bumper;
 //            boolean bumperRight2 = gamepad2.right_bumper;
 
+
+            goalAngle = Math.toDegrees(Math.atan2(gamepad1.left_stick_y,gamepad1.left_stick_x) + Math.PI / 2);
+            robotAngle360 = to360(robotAngle);
+            goalAngle360 = to360(goalAngle);
+
+            double speed = smallestAngleBetween(robotAngle360, goalAngle360)/180;
+
             robotAngle = imu.getAngularOrientation().firstAngle;
 
-            double r = 0.3;
-            double goalAngle = 0;
-            double correctionAmount = robotAngle - goalAngle;
-                //double correctedAngle = goalAngle - correctionAmount;
-//                if(Math.abs(correctionAmount) <= 30) {
-//                    robot.rearLeftDriveMotor.setPower(0.1);
-//                    robot.frontLeftDriveMotor.setPower(0.1);
-//                    robot.rearRightDriveMotor.setPower(0.1);
-//                    robot.frontRightDriveMotor.setPower(0.1);
-//                } else if (Math.abs(correctionAmount) >= 5) {
-//                    double lrPoweqr = r;
-//                    double lfPower = r;
-//                    double rrPower = r;
-//                    double rfPower = r;
-//                    robot.rearLeftDriveMotor.setPower(lrPower);
-//                    robot.frontLeftDriveMotor.setPower(lfPower);
-//                    robot.rearRightDriveMotor.setPower(rrPower);
-//                    robot.frontRightDriveMotor.setPower(rfPower);
+            if (robotAngle360 <= 180) {
+                if (goalAngle360 < robotAngle360 || goalAngle360 > robotAngle360 + 180) {
+                    rotate(-speed);
+                } else {
+                    rotate(speed);
+                }
+            } else {
+                if (goalAngle360 > robotAngle360 || goalAngle360 < robotAngle360 - 180) {
+                    rotate(speed);
+                } else {
+                    rotate(-speed);
+                }
+            }
+//            if (robotAngle > 0){
+//                if (robotAngle < 7){
+//                    stopMotor();
+//                    telemetry.addData("Stopped", robotAngle);
+//                    telemetry.update();
 //                } else {
-//                    robot.rearLeftDriveMotor.setPower(0);
-//                    robot.frontLeftDriveMotor.setPower(0);
-//                    robot.rearRightDriveMotor.setPower(0);
-//                    robot.frontRightDriveMotor.setPower(0);
+//                    rotate(0.3);
 //                }
-
-
-            telemetry.addData("Robot Angle: ", robotAngle );
+//
+//            } else {
+//                if (robotAngle > -7){
+//                    stopMotor();
+//                    telemetry.addData("Stopped", robotAngle);
+//                    telemetry.update();
+//                } else {
+//                    rotate(-0.3);
+//                }
+//
+//            }
+            telemetry.addData("Robot Angle", robotAngle360);
+            telemetry.addData("Goal Angle",  goalAngle);
+            telemetry.addData("Goal Angle 360",  goalAngle360);
+            telemetry.addData("Angle Between",  smallestAngleBetween(goalAngle360,robotAngle360));
+            telemetry.addData("Speed", speed);
             telemetry.update();
+
             resetAngle();
         }
 
@@ -159,10 +181,42 @@ public class DriveByWire extends LinearOpMode {
         globalAngle = 0;
     }
 
-    private void turn(double speed) {
+    private void rotate(double speed) {
+        //Turns the robot to the right
+        //Speed Range is 0 to 1
         robot.drive.frontLeft.setPower(speed);
         robot.drive.rearLeft.setPower(speed);
-        robot.drive.frontRight.setPower(speed);
-        robot.drive.rearRight.setPower(speed);
+        robot.drive.frontRight.setPower(-speed);
+        robot.drive.rearRight.setPower(-speed);
+    }
+
+    private void stopMotor() {
+        //Stops the motor
+        robot.frontLeftDriveMotor.setPower(0);
+        robot.frontRightDriveMotor.setPower(0);
+        robot.rearLeftDriveMotor.setPower(0);
+        robot.rearRightDriveMotor.setPower(0);
+    }
+
+    private double to360(double angle) {
+        //Converts from euler units to 360 degrees
+        //Goes from 0 to 360 in a clockwise fasion
+        //Accepts numbers between -180 and 180
+        if (angle >= 0) {
+            return angle;
+        } else {
+            return angle + 360;
+        }
+    }
+
+    private double smallestAngleBetween(double angle1, double angle2) {
+        //Returns the smallest angle between angle1 and angle 2
+        //Accepts the range 0 - 360 for both angles
+        double distanceBetween = Math.abs(angle2 - angle1);
+        if ((360 - distanceBetween) < distanceBetween) {
+            return 360 - distanceBetween;
+        } else {
+            return distanceBetween;
+        }
     }
 }

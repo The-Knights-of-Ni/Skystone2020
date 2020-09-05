@@ -1,16 +1,15 @@
-package org.firstinspires.ftc.teamcode.auto;
+package org.firstinspires.ftc.teamcode.Auto;
 
 import android.util.Log;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.RobotLog;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
-import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.robotcore.external.matrices.MatrixF;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
 import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -21,21 +20,20 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
-import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
-import org.firstinspires.ftc.teamcode.Robot;
+import org.firstinspires.ftc.teamcode.SubSystems.Robot;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.firstinspires.ftc.robotcore.external.navigation.AngleUnit.DEGREES;
 import static org.firstinspires.ftc.robotcore.external.navigation.AxesOrder.XYZ;
-import static org.firstinspires.ftc.robotcore.external.navigation.AxesOrder.YZX;
 import static org.firstinspires.ftc.robotcore.external.navigation.AxesReference.EXTRINSIC;
 import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer.CameraDirection.BACK;
-import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer.CameraDirection.FRONT;
 
 @Autonomous(name = "AutoMark1")
+@Disabled
 public class AutoMark1 extends LinearOpMode {
     private static final String TAG = "AutoMark1";
 
@@ -90,9 +88,17 @@ public class AutoMark1 extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         timer = new ElapsedTime();
         double startTime = 0.0;
-        robot = new Robot(this, timer);
+        try {
+            robot = new Robot(this, timer);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
-        initRobot();
+        try {
+            initRobot();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         waitForStart();
 
         log("Started Mark 1 Auto");
@@ -179,7 +185,7 @@ public class AutoMark1 extends LinearOpMode {
         return transformationMatrix.formatAsTransform();
     }
 
-    private void initRobot() {
+    private void initRobot() throws IOException {
         robot.init();
         robot.drive.setRunMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.drive.setRunMode(DcMotor.RunMode.RUN_USING_ENCODER);

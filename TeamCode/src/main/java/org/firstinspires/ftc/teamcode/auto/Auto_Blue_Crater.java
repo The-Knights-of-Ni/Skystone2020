@@ -1,7 +1,8 @@
-package org.firstinspires.ftc.teamcode.auto;
+package org.firstinspires.ftc.teamcode.Auto;
 
 import android.util.Log;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -16,8 +17,9 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
-import org.firstinspires.ftc.teamcode.Robot;
+import org.firstinspires.ftc.teamcode.SubSystems.Robot;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,6 +31,7 @@ import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocaliz
 import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer.CameraDirection.FRONT;
 
 @Autonomous(name = "AutoBlueCrater")
+@Disabled
 public class Auto_Blue_Crater extends LinearOpMode {
     private static final String TAG = "AutoBlueCrater";
 
@@ -119,9 +122,17 @@ public class Auto_Blue_Crater extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         timer = new ElapsedTime();
         double startTime = 0.0;
-        robot = new Robot(this, timer);
+        try {
+            robot = new Robot(this, timer);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
-        initRobot();
+        try {
+            initRobot();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         waitForStart();
 
         log("Started Mark 1 Auto");
@@ -181,7 +192,7 @@ public class Auto_Blue_Crater extends LinearOpMode {
 
 
 
-    private void initRobot() {
+    private void initRobot() throws IOException {
         robot.init();
         robot.drive.setRunMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.drive.setRunMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -209,12 +220,6 @@ public class Auto_Blue_Crater extends LinearOpMode {
         // Loading trackables is not necessary for the Tensor Flow Object Detection engine.
         telemetry.addLine("Vuforia Init Done");
         telemetry.update();
-        //Tensorflow init
-//        int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
-//                "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-//        TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
-//        tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
-//        tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_GOLD_MINERAL, LABEL_SILVER_MINERAL);
 
         //Vuforia Navigation Init
         // Load the data sets that for the trackable objects. These particular data
@@ -433,10 +438,6 @@ public class Auto_Blue_Crater extends LinearOpMode {
 
     private void turnRobot(double degrees) {
         robot.drive.turnByAngle(TURN_SPEED, degrees);
-//        robotCurrentPosX += ROBOT_HALF_LENGTH * (Math.cos((robotCurrentAngle+degrees)*Math.PI/180.0)
-//                - Math.cos(robotCurrentAngle*Math.PI/180.0));
-//        robotCurrentPosY += ROBOT_HALF_LENGTH * (Math.sin((robotCurrentAngle+degrees)*Math.PI/180.0)
-//                - Math.sin(robotCurrentAngle*Math.PI/180.0));
         robotCurrentAngle += degrees;
         // Display it for the driver.
         telemetry.addData("turnRobot",  "turn to %7.2f degrees", robotCurrentAngle);
@@ -444,8 +445,8 @@ public class Auto_Blue_Crater extends LinearOpMode {
         sleep(100);
     }
 
+    // move to a target position (targetPositionX, targetPositionY) in absolute field coordinates
     private void moveToPosABS(double targetPositionX, double targetPositionY) {
-        // move to (targetPositionX, targetPositionY) in absolute field coordinate
         double  deltaX = targetPositionX - robotCurrentPosX;    // in absolute field coordinate
         double  deltaY = targetPositionY - robotCurrentPosY;    // in absolute field coordinate
         double  distanceCountX, distanceCountY;  // distance in motor count in robot coordinate
@@ -463,13 +464,14 @@ public class Auto_Blue_Crater extends LinearOpMode {
         sleep(100);
     }
 
+    // move to target position (targetPositionX, targetPositionY) in relative robot coordinates
     private void moveToPosREL(double targetPositionX, double targetPositionY) {
-        // move to (targetPositionX, targetPositionY) in relative robot coordinate
         robot.drive.moveToPos2D(DRIVE_SPEED, targetPositionX, targetPositionY);
         robotCurrentPosX += targetPositionY * Math.cos(robotCurrentAngle*Math.PI/180.0)
                 + targetPositionX * Math.cos((robotCurrentAngle-90.0)*Math.PI/180.0);
         robotCurrentPosY += targetPositionY * Math.sin(robotCurrentAngle*Math.PI/180.0)
                 + targetPositionX * Math.sin((robotCurrentAngle-90.0)*Math.PI/180.0);
+
         // Display it for the driver.
         telemetry.addData("moveToPosREL",  "move to %7.2f, %7.2f", robotCurrentPosX,  robotCurrentPosY);
         telemetry.update();

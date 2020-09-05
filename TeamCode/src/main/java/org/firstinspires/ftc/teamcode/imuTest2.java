@@ -8,29 +8,30 @@
 
 package org.firstinspires.ftc.teamcode;
 
-        import com.qualcomm.hardware.bosch.BNO055IMU;
-        import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-        import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-        import com.qualcomm.robotcore.hardware.DcMotor;
-        import com.qualcomm.robotcore.hardware.TouchSensor;
-        import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
-        import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-        import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
-        import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
-        import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
-        import org.firstinspires.ftc.robotcore.external.navigation.Position;
-        import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+import org.firstinspires.ftc.teamcode.SubSystems.Robot;
+
+import java.io.IOException;
 
 @Autonomous(name="Drive Avoid Imu", group="Exercises")
-//@Disabled
+@Disabled
 public class imuTest2 extends LinearOpMode
 {
     private Robot robot;
     private BNO055IMU imu;
     Orientation             lastAngles = new Orientation();
     double                  globalAngle, power = .30;
-    private void initOpMode() {
+    private void initOpMode() throws IOException {
         //Initialize DC motor objects
         ElapsedTime timer = new ElapsedTime();
         robot = new Robot(this, timer);
@@ -41,7 +42,11 @@ public class imuTest2 extends LinearOpMode
     @Override
     public void runOpMode() throws InterruptedException
     {
-        initOpMode();
+        try {
+            initOpMode();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         robot.frontLeftDriveMotor.setDirection(DcMotor.Direction.REVERSE);
         robot.rearLeftDriveMotor.setDirection(DcMotor.Direction.REVERSE);
 
