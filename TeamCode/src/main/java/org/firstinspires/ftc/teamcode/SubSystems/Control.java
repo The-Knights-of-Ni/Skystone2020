@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.SubSystems;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -13,7 +12,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Control subsystem for controlling arms and claws
  * Created by AndrewC on 1/17/2020
  */
-public class Control extends Subsystem {
+public class Control extends org.firstinspires.ftc.teamcode.SubSystems.Subsystem {
     // device declaration
     private HardwareMap hardwareMap;
     private LinearOpMode opMode;
