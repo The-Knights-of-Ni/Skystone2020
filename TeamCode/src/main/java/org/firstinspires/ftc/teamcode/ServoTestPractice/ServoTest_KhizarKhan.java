@@ -40,7 +40,7 @@ public class ServoTest_KhizarKhan extends LinearOpMode{
             //Get the current time
             CurrentTime = timer.nanoseconds();
 
-
+        //GAMEPAD 1 CODE
             //main claw arm servo test
             if (robot.leftStickX > 0.5) //controls main claw ARM itself
                 robot.control.modifyServo(robot.mainClawArm, 0.005);
@@ -68,7 +68,7 @@ public class ServoTest_KhizarKhan extends LinearOpMode{
                 robot.control.modifyServo(robot.mainClaw,0.005);
             else if (robot.rightStickX > 0.1)
                 robot.control.modifyServo(robot.mainClaw,0.001);
-            else if (robot.rightStickX > -0.1)
+            else if (robot.rightStickX > -0.1) //do nothing
                 robot.control.modifyServo(robot.mainClaw,0.0);
             else if (robot.rightStickX > -0.5)
                 robot.control.modifyServo(robot.mainClaw,-0.001);
@@ -81,7 +81,7 @@ public class ServoTest_KhizarKhan extends LinearOpMode{
                 robot.control.modifyServo(robot.csArm,0.005);
             else if (robot.leftStickX2 > 0.1)
                 robot.control.modifyServo(robot.csArm,0.001);
-            else if (robot.leftStickX2 > -0.1)
+            else if (robot.leftStickX2 > -0.1) //do nothing
                 robot.control.modifyServo(robot.csArm,0.0);
             else if (robot.leftStickX2 > -0.5)
                 robot.control.modifyServo(robot.csArm,-0.001);
@@ -92,7 +92,7 @@ public class ServoTest_KhizarKhan extends LinearOpMode{
                 robot.control.modifyServo(robot.csClaw,0.005);
             else if (robot.rightStickX2 > 0.1)
                 robot.control.modifyServo(robot.csClaw,0.001);
-            else if (robot.rightStickX2 > -0.1)
+            else if (robot.rightStickX2 > -0.1) //do nothing
                 robot.control.modifyServo(robot.csClaw,0.0);
             else if (robot.rightStickX2 > -0.5)
                 robot.control.modifyServo(robot.csClaw,-0.001);
@@ -104,7 +104,7 @@ public class ServoTest_KhizarKhan extends LinearOpMode{
                 robot.control.modifyServo(robot.fClawL,0.005);
             else if (robot.leftStickY2 > 0.1)
                 robot.control.modifyServo(robot.fClawL,0.001);
-            else if (robot.leftStickY2 > -0.1)
+            else if (robot.leftStickY2 > -0.1) //do nothing
                 robot.control.modifyServo(robot.fClawL,0.0);
             else if (robot.leftStickY2 > -0.5)
                 robot.control.modifyServo(robot.fClawL,-0.001);
@@ -115,7 +115,7 @@ public class ServoTest_KhizarKhan extends LinearOpMode{
                 robot.control.modifyServo(robot.fClawR,0.005);
             else if (robot.rightStickY2 > 0.1)
                 robot.control.modifyServo(robot.fClawR,0.001);
-            else if (robot.rightStickY2 > -0.1)
+            else if (robot.rightStickY2 > -0.1) //do nothing
                 robot.control.modifyServo(robot.fClawR,0.0);
             else if (robot.rightStickY2 > -0.5)
                 robot.control.modifyServo(robot.fClawR,-0.001);

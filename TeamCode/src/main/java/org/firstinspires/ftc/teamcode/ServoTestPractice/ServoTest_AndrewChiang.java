@@ -37,8 +37,6 @@ public class ServoTest_AndrewChiang extends LinearOpMode {
         }
         robot.initServosAuto();
         telemetry.clearAll();
-//        telemetry.addLine("Wait For Start");
-//        telemetry.update();
         waitForStart();
 
         while(opModeIsActive()){
@@ -49,6 +47,7 @@ public class ServoTest_AndrewChiang extends LinearOpMode {
             timeCurrent = timer.nanoseconds();
 
             // test main arm servos
+
             if (robot.leftStickX > 0.5) {
                 robot.control.modifyServo(robot.mainClawArm,0.005);
             }
