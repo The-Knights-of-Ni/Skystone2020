@@ -33,7 +33,7 @@ public class ServoTest_KhizarKhan extends LinearOpMode{
         waitForStart(); //waits for start
         //leftstickx, leftstickx2, leftsticky, leftsticky2, etc.
         while (opModeIsActive()) {
-            if (robot.mainClawArm )
+            if (robot.leftStickX )
         }
 
 
