@@ -49,7 +49,6 @@ public class ServoTest_AndrewChiang extends LinearOpMode {
             timeCurrent = timer.nanoseconds();
 
             // test main arm servos
-
             if (robot.leftStickX > 0.5) {
                 robot.control.modifyServo(robot.mainClawArm,0.005);
             }
