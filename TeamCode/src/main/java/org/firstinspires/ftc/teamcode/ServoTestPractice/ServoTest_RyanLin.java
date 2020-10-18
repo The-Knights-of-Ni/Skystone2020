@@ -13,7 +13,7 @@ import java.io.IOException;
  */
 
 @TeleOp(name="Servo Test AndrewC")
-public class ServoTest_AndrewChiang extends LinearOpMode {
+public class ServoTest_RyanLin extends LinearOpMode {
     private static final int targetPosition = 315;
     private static final double maxPower = 0;
     private static final float mmPerInch        = 25.4f;
@@ -37,6 +37,8 @@ public class ServoTest_AndrewChiang extends LinearOpMode {
         }
         robot.initServosAuto();
         telemetry.clearAll();
+//        telemetry.addLine("Wait For Start");
+//        telemetry.update();
         waitForStart();
 
         while(opModeIsActive()){
@@ -47,7 +49,6 @@ public class ServoTest_AndrewChiang extends LinearOpMode {
             timeCurrent = timer.nanoseconds();
 
             // test main arm servos
-
             if (robot.leftStickX > 0.5) {
                 robot.control.modifyServo(robot.mainClawArm,0.005);
             }

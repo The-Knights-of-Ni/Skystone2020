@@ -8,175 +8,127 @@ import org.firstinspires.ftc.teamcode.SubSystems.Robot;
 
 import java.io.IOException;
 
-/**
- * Modified by AndrewC on 10/10/2020.
- */
-
-@TeleOp(name="Servo Test AndrewC")
-public class ServoTest_AndrewChiang extends LinearOpMode {
-    private static final int targetPosition = 315;
-    private static final double maxPower = 0;
-    private static final float mmPerInch        = 25.4f;
-
+@TeleOp(name="Servo Test SophieM")
+public class ServoTest_SophieMansoor extends LinearOpMode {
     private Robot robot;
 
-    double timePre;
-    double timeCurrent;
-    ElapsedTime timer;
+    double timePre = 0;
+    double timeCurrent = 0;
+    ElapsedTime timer = new ElapsedTime();
 
     public void initOpMode() throws IOException {
-        timer = new ElapsedTime();
         this.robot = new Robot(this, timer);
-
     }
+
     public void runOpMode() {
         try {
             initOpMode();
         } catch (IOException e) {
             e.printStackTrace();
         }
+
         robot.initServosAuto();
-        telemetry.clearAll();
         waitForStart();
 
-        while(opModeIsActive()){
-            //Get gamepad inputs
-            robot.getGamePadInputs();
+        while(opModeIsActive()) {
 
-            //Get the current time
+            robot.getGamePadInputs();
             timeCurrent = timer.nanoseconds();
 
-            // test main arm servos
-
+            //main claw arm
             if (robot.leftStickX > 0.5) {
                 robot.control.modifyServo(robot.mainClawArm,0.005);
-            }
-            else if (robot.leftStickX > 0.1) {
+            } else if (robot.leftStickX > 0.1) {
                 robot.control.modifyServo(robot.mainClawArm,0.001);
-            }
-            else if (robot.leftStickX > -0.1) {
+            } else if (robot.leftStickX > -0.1) {
                 robot.control.modifyServo(robot.mainClawArm,0.0);
-            }
-            else if (robot.leftStickX > -0.5) {
+            } else if (robot.leftStickX > -0.5) {
                 robot.control.modifyServo(robot.mainClawArm,-0.001);
-            }
-            else {
+            } else {
                 robot.control.modifyServo(robot.mainClawArm,-0.005);
             }
 
+            //main claw rotation
             if (robot.rightStickY > 0.5) {
                 robot.control.modifyServo(robot.mainClawRotation,0.005);
-            }
-            else if (robot.rightStickY > 0.1) {
+            } else if (robot.rightStickY > 0.1) {
                 robot.control.modifyServo(robot.mainClawRotation,0.001);
-            }
-            else if (robot.rightStickY > -0.1) {
+            } else if (robot.rightStickY > -0.1) {
                 robot.control.modifyServo(robot.mainClawRotation,0.0);
-            }
-            else if (robot.rightStickY > -0.5) {
+            } else if (robot.rightStickY > -0.5) {
                 robot.control.modifyServo(robot.mainClawRotation,-0.001);
-            }
-            else {
+            } else {
                 robot.control.modifyServo(robot.mainClawRotation,-0.005);
             }
 
+            //main claw
             if (robot.rightStickX > 0.5) {
                 robot.control.modifyServo(robot.mainClaw,0.005);
-            }
-            else if (robot.rightStickX > 0.1) {
+            } else if (robot.rightStickX > 0.1) {
                 robot.control.modifyServo(robot.mainClaw,0.001);
-            }
-            else if (robot.rightStickX > -0.1) {
+            } else if (robot.rightStickX > -0.1) {
                 robot.control.modifyServo(robot.mainClaw,0.0);
-            }
-            else if (robot.rightStickX > -0.5) {
+            } else if (robot.rightStickX > -0.5) {
                 robot.control.modifyServo(robot.mainClaw,-0.001);
-            }
-            else {
+            } else {
                 robot.control.modifyServo(robot.mainClaw,-0.005);
             }
 
-            telemetry.addData("Main Arm           (LX) ", "%.3f", robot.mainClawArm.getPosition());
-            telemetry.addData("Main Claw Rotation (RY) ", "%.3f", robot.mainClawRotation.getPosition());
-            telemetry.addData("Main Claw          (RX) ", "%.3f", robot.mainClaw.getPosition());
-
-            // test capstone arm servos
-
+            //capstone arm
             if (robot.leftStickX2 > 0.5) {
                 robot.control.modifyServo(robot.csArm,0.005);
-            }
-            else if (robot.leftStickX2 > 0.1) {
+            } else if (robot.leftStickX2 > 0.1) {
                 robot.control.modifyServo(robot.csArm,0.001);
-            }
-            else if (robot.leftStickX2 > -0.1) {
+            } else if (robot.leftStickX2 > -0.1) {
                 robot.control.modifyServo(robot.csArm,0.0);
-            }
-            else if (robot.leftStickX2 > -0.5) {
+            } else if (robot.leftStickX2 > -0.5) {
                 robot.control.modifyServo(robot.csArm,-0.001);
-            }
-            else {
-                robot.control.modifyServo(robot.csArm,-0.005);
+            } else {
+                robot.control.modifyServo(robot.csArm, -0.005);
             }
 
+            //capstone claw
             if (robot.rightStickX2 > 0.5) {
                 robot.control.modifyServo(robot.csClaw,0.005);
-            }
-            else if (robot.rightStickX2 > 0.1) {
+            } else if (robot.rightStickX2 > 0.1) {
                 robot.control.modifyServo(robot.csClaw,0.001);
-            }
-            else if (robot.rightStickX2 > -0.1) {
+            } else if (robot.rightStickX2 > -0.1) {
                 robot.control.modifyServo(robot.csClaw,0.0);
-            }
-            else if (robot.rightStickX2 > -0.5) {
+            } else if (robot.rightStickX2 > -0.5) {
                 robot.control.modifyServo(robot.csClaw,-0.001);
-            }
-            else {
+            } else {
                 robot.control.modifyServo(robot.csClaw,-0.005);
             }
 
-            telemetry.addData("Capstone Arm  (LX2) ", "%.3f", robot.csArm.getPosition());
-            telemetry.addData("Capstone Claw (RX2) ", "%.3f", robot.csClaw.getPosition());
-
-            // test foundation claw servos
-
+            //foundation claw left
             if (robot.leftStickY2 > 0.5) {
                 robot.control.modifyServo(robot.fClawL,0.005);
-            }
-            else if (robot.leftStickY2 > 0.1) {
+            } else if (robot.leftStickY2 > 0.1) {
                 robot.control.modifyServo(robot.fClawL,0.001);
-            }
-            else if (robot.leftStickY2 > -0.1) {
+            } else if (robot.leftStickY2 > -0.1) {
                 robot.control.modifyServo(robot.fClawL,0.0);
-            }
-            else if (robot.leftStickY2 > -0.5) {
+            } else if (robot.leftStickY2 > -0.5) {
                 robot.control.modifyServo(robot.fClawL,-0.001);
-            }
-            else {
+            } else {
                 robot.control.modifyServo(robot.fClawL,-0.005);
             }
 
+            //foundation claw right
             if (robot.rightStickY2 > 0.5) {
                 robot.control.modifyServo(robot.fClawR,0.005);
-            }
-            else if (robot.rightStickY2 > 0.1) {
+            } else if (robot.rightStickY2 > 0.1) {
                 robot.control.modifyServo(robot.fClawR,0.001);
-            }
-            else if (robot.rightStickY2 > -0.1) {
+            } else if (robot.rightStickY2 > -0.1) {
                 robot.control.modifyServo(robot.fClawR,0.0);
-            }
-            else if (robot.rightStickY2 > -0.5) {
+            } else if (robot.rightStickY2 > -0.5) {
                 robot.control.modifyServo(robot.fClawR,-0.001);
-            }
-            else {
+            } else {
                 robot.control.modifyServo(robot.fClawR,-0.005);
             }
 
-            telemetry.addData("Foundation Claw L (LY2) ", "%.3f", robot.fClawL.getPosition());
-            telemetry.addData("Foundation Claw R (RY2) ", "%.3f", robot.fClawR.getPosition());
-
-            telemetry.update();
             sleep(100);
         }
 
     }
+
 }
