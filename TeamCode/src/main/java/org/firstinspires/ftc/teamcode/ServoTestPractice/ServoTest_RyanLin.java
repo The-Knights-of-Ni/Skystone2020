@@ -12,7 +12,7 @@ import java.io.IOException;
  * Modified by AndrewC on 10/10/2020.
  */
 
-@TeleOp(name="Servo Test AndrewC")
+@TeleOp(name="Servo Test RyanL")
 public class ServoTest_RyanLin extends LinearOpMode {
     private static final int targetPosition = 315;
     private static final double maxPower = 0;
