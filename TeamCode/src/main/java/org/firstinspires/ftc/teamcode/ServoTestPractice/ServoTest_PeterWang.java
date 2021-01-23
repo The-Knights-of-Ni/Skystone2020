@@ -13,6 +13,11 @@ public class ServoTest_PeterWang extends LinearOpMode {
     private Robot robot;
 
     double timePre = 0;
+    @Override
+    public void runOpMode() throws InterruptedException
+    {
+
+    }
 
 
 }

@@ -426,5 +426,3 @@ public class MultithreadingTest extends LinearOpMode {
     }
 
 }
-
-}
