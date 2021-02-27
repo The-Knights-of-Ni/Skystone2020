@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.SubSystems.Robot;
+import org.opencv.imgproc.Imgproc;
 
 import java.io.IOException;
 
@@ -81,6 +82,7 @@ public class MultithreadingTest extends LinearOpMode {
         initOpMode();
 
         Thread deployMainClawArm = new DeployMainClawArm();
+        Thread visionThread = new visionThread();
         Thread driveThread = new DriveThread();
         
         waitForStart();
@@ -115,6 +117,7 @@ public class MultithreadingTest extends LinearOpMode {
             }
 
             driveThread.start();
+            visionThread.start();
 
             moveFoundationClaw();
 
@@ -367,6 +370,76 @@ public class MultithreadingTest extends LinearOpMode {
 //            Logging.log("end of thread %s", this.getName());
         }
     }
+
+
+    class VisionThread extends Thread {
+        public VisionThread() {
+            this.setName("VisionThread");
+
+            telemetry.addData("VisionThread ", this.getName());
+            telemetry.update();
+        }
+
+        // called when tread.start is called. thread stays in loop to do what it does until exit is
+        // signaled by main code calling thread.interrupt.
+        @Override
+        public void run() {
+            telemetry.addData("Starting thread ", this.getName());
+            int evenValue = 0;
+            try {
+//                while (!isInterrupted()) {
+//                    // we record the Y values in the main class to make showing them in telemetry
+//                    // easier.
+//
+//                    robot.leftStickY = gamepad1.left_stick_y * -1;
+//                    robot.rightStickY = gamepad1.right_stick_y * -1;
+//
+////                    robot.frontLeftDriveMotor.setPower(Range.clip(leftY, -1.0, 1.0));
+////                    rightMotor.setPower(Range.clip(rightY, -1.0, 1.0));
+//
+//                    idle();
+//                }
+
+                while (!isInterrupted()) {
+                    timeCurrent = timer.nanoseconds();
+                    timePre = timeCurrent;
+
+                    robot.vision.getTargetsSkyStone().activate();
+
+                    mainArmHorizontalPos = 40.0;
+                    mainArmVerticalPos = 80.0;
+                    robot.control.setMainArmPosition(mainArmHorizontalPos, mainArmVerticalPos);
+                    robot.control.setMainClawArmDegrees(robot.control.getMainArmTargetAngle());
+
+                    // save images
+                    if (robot.aButton && !robot.isaButtonPressedPrev) {
+                        robot.getOpmode().telemetry.addData("saving ", "images...");
+                        robot.vision.saveImage("VisionTest", robot.vision.frameBuffer2, Imgproc.COLOR_RGBA2BGR, "original", (long) timeCurrent);
+                        robot.vision.saveImage("VisionTest", robot.vision.frameBuffer1, Imgproc.COLOR_RGBA2BGR, "undistorted", (long) timeCurrent);
+                        robot.vision.saveImage("VisionTest", robot.vision.yCbCrChan2Mat_compensatedn, Imgproc.COLOR_RGBA2BGR, "CbImage_c25n", (long) timeCurrent);
+                        robot.vision.saveImage("VisionTest", robot.vision.yCbCrChan2Mat_compensated, Imgproc.COLOR_RGBA2BGR, "CbImage_c25", (long) timeCurrent);
+                        robot.vision.saveImage("VisionTest", robot.vision.yCbCrChan1Mat_compensated, Imgproc.COLOR_RGBA2BGR, "CrImage_c25", (long) timeCurrent);
+                        robot.vision.saveImage("VisionTest", robot.vision.yCbCrChan2Mat, Imgproc.COLOR_RGBA2BGR, "CbImage", (long) timeCurrent);
+                        robot.vision.saveImage("VisionTest", robot.vision.yCbCrChan1Mat, Imgproc.COLOR_RGBA2BGR, "CrImage", (long) timeCurrent);
+                        robot.vision.saveImage("VisionTest", robot.vision.yCbCrChan0Mat, Imgproc.COLOR_RGBA2BGR, "YImage", (long) timeCurrent);
+                        robot.vision.saveImage("VisionTest", robot.vision.thresholdMat, Imgproc.COLOR_RGBA2BGR, "threshold", (long) timeCurrent);
+                        robot.vision.saveImage("VisionTest", robot.vision.contoursOnFrameMat, Imgproc.COLOR_RGBA2BGR, "contours", (long) timeCurrent);
+                    }
+                }
+
+            }
+            // interrupted means time to shutdown. note we can stop by detecting isInterrupted = true
+            // or by the interrupted exception thrown from the sleep function.
+            // an error occurred in the run loop.
+            catch (Exception e) {
+//                e.printStackTrace(Logging.logPrintStream);
+            }
+
+//            Logging.log("end of thread %s", this.getName());
+        }
+    }
+
+
 
 
     class DriveThread extends Thread {
