@@ -82,7 +82,7 @@ public class MultithreadingTest extends LinearOpMode {
         initOpMode();
 
         Thread deployMainClawArm = new DeployMainClawArm();
-        Thread visionThread = new visionThread();
+        Thread visionThread = new VisionThread();
         Thread driveThread = new DriveThread();
         
         waitForStart();
